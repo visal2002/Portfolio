@@ -1,0 +1,7 @@
+{
+  "extends": ["development"],
+  "ignoredUrls": ["node_modules/"],
+  "hints": {
+    "compat-api/css": "off"
+  }
+}
