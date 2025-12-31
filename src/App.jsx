@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import emailjs from '@emailjs/browser'
 import StarBackground from './components/StarBackground'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import './App.css'
@@ -61,42 +60,37 @@ function App() {
     }
 
     try {
-      // Using EmailJS service
-      // Note: You'll need to set up EmailJS account and get your service ID, template ID, and public key
-      // For now, we'll use a fallback to mailto if EmailJS is not configured
-      const serviceId = 'service_portfolio' // Replace with your EmailJS service ID
-      const templateId = 'template_portfolio' // Replace with your EmailJS template ID
-      const publicKey = 'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      // Using Formspree to send emails directly to chettrivishal677@gmail.com
+      // SETUP REQUIRED: 
+      // 1. Go to https://formspree.io/ and create a free account
+      // 2. Create a new form with email: chettrivishal677@gmail.com
+      // 3. Copy your form ID (looks like: xpwnvqjz)
+      // 4. Replace 'xpwnvqjz' below with your actual Formspree form ID
+      const FORMSPREE_FORM_ID = 'xpwnvqjz' // ⬅️ REPLACE THIS with your Formspree form ID
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject || 'Portfolio Contact Form',
+          message: formData.message,
+          _replyto: formData.email,
+          _subject: formData.subject || 'New Message from Portfolio',
+        }),
+      })
 
-      // Check if EmailJS is configured
-      if (publicKey !== 'YOUR_PUBLIC_KEY') {
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            from_name: formData.name,
-            from_email: formData.email,
-            subject: formData.subject || 'Portfolio Contact Form',
-            message: formData.message,
-            to_email: 'chettrivishal677@gmail.com'
-          },
-          publicKey
-        )
-        setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent successfully.' })
+      if (response.ok) {
+        setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent successfully. I\'ll get back to you soon!' })
         setFormData({ name: '', email: '', subject: '', message: '' })
       } else {
-        // Fallback to mailto if EmailJS is not configured
-        const mailtoLink = `mailto:chettrivishal677@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
-        window.location.href = mailtoLink
-        setFormStatus({ type: 'success', message: 'Opening your email client...' })
-        setFormData({ name: '', email: '', subject: '', message: '' })
+        throw new Error('Failed to send message')
       }
     } catch (error) {
       console.error('Error sending email:', error)
-      // Fallback to mailto on error
-      const mailtoLink = `mailto:chettrivishal677@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
-      window.location.href = mailtoLink
-      setFormStatus({ type: 'info', message: 'Opening your email client as fallback...' })
+      setFormStatus({ type: 'error', message: 'Sorry, there was an error sending your message. Please try again or email me directly at chettrivishal677@gmail.com' })
     } finally {
       setIsSubmitting(false)
     }
