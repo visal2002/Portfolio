@@ -27,6 +27,6 @@ yarn-error.log*
 # Coverage
 /coverage/
 
-# Package lock files (optional)
-package-lock.json
+# Package lock files - keep package-lock.json for CI/CD
+# package-lock.json - Keep this for GitHub Actions
 yarn.lock
