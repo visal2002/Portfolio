@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import emailjs from '@emailjs/browser'
 import StarBackground from './components/StarBackground'
 import { useScrollAnimation } from './hooks/useScrollAnimation'
 import './App.css'
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [formStatus, setFormStatus] = useState({ type: '', message: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   useScrollAnimation()
 
   useEffect(() => {
@@ -17,6 +26,80 @@ function App() {
 
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    // Clear status message when user starts typing
+    if (formStatus.message) {
+      setFormStatus({ type: '', message: '' })
+    }
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setFormStatus({ type: '', message: '' })
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.message) {
+      setFormStatus({ type: 'error', message: 'Please fill in all required fields.' })
+      setIsSubmitting(false)
+      return
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      setFormStatus({ type: 'error', message: 'Please enter a valid email address.' })
+      setIsSubmitting(false)
+      return
+    }
+
+    try {
+      // Using EmailJS service
+      // Note: You'll need to set up EmailJS account and get your service ID, template ID, and public key
+      // For now, we'll use a fallback to mailto if EmailJS is not configured
+      const serviceId = 'service_portfolio' // Replace with your EmailJS service ID
+      const templateId = 'template_portfolio' // Replace with your EmailJS template ID
+      const publicKey = 'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+
+      // Check if EmailJS is configured
+      if (publicKey !== 'YOUR_PUBLIC_KEY') {
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            from_name: formData.name,
+            from_email: formData.email,
+            subject: formData.subject || 'Portfolio Contact Form',
+            message: formData.message,
+            to_email: 'chettrivishal677@gmail.com'
+          },
+          publicKey
+        )
+        setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent successfully.' })
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      } else {
+        // Fallback to mailto if EmailJS is not configured
+        const mailtoLink = `mailto:chettrivishal677@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
+        window.location.href = mailtoLink
+        setFormStatus({ type: 'success', message: 'Opening your email client...' })
+        setFormData({ name: '', email: '', subject: '', message: '' })
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+      // Fallback to mailto on error
+      const mailtoLink = `mailto:chettrivishal677@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
+      window.location.href = mailtoLink
+      setFormStatus({ type: 'info', message: 'Opening your email client as fallback...' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const skillsData = {
@@ -423,17 +506,85 @@ function App() {
                 </div>
               </div>
               <div>
-                <h3 className="text-2xl font-semibold text-white mb-6">Let's Connect</h3>
-                <p className="text-slate-300 mb-6">
-                  I'm always interested in discussing new opportunities, collaborations, or just connecting with fellow data enthusiasts. 
-                  Feel free to reach out!
-                </p>
-                <div className="flex gap-4">
-                  <a href="mailto:chettrivishal677@gmail.com" className="button bg-blue-600 hover:bg-blue-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mr-2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                    Send Email
-                  </a>
-                  <a href="/home/ubuntu/upload/.recovery/VISHALCHETTRIResume.pdf" download="VISHALCHETTRIResume.pdf" className="button outline">
+                <h3 className="text-2xl font-semibold text-white mb-6">Send me a Message</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Your Name *"
+                      required
+                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Your Email *"
+                      required
+                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      placeholder="Subject"
+                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all"
+                    />
+                  </div>
+                  <div>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Your Message *"
+                      required
+                      rows="5"
+                      className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all resize-none"
+                    ></textarea>
+                  </div>
+                  {formStatus.message && (
+                    <div className={`p-3 rounded-lg ${
+                      formStatus.type === 'success' 
+                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                        : formStatus.type === 'error'
+                        ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                    }`}>
+                      {formStatus.message}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full button bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mr-2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        Send Message
+                      </>
+                    )}
+                  </button>
+                </form>
+                <div className="mt-4">
+                  <a href="/home/ubuntu/upload/.recovery/VISHALCHETTRIResume.pdf" download="VISHALCHETTRIResume.pdf" className="button outline w-full text-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                     Download Resume
                   </a>
