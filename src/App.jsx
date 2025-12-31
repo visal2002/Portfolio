@@ -4,6 +4,9 @@ import { useScrollAnimation } from './hooks/useScrollAnimation'
 import './App.css'
 
 function App() {
+    // Chatbot open/close state
+    const [chatbotOpen, setChatbotOpen] = useState(false)
+    const toggleChatbot = () => setChatbotOpen(open => !open)
   const [scrolled, setScrolled] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -14,6 +17,26 @@ function App() {
   const [formStatus, setFormStatus] = useState({ type: '', message: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
   useScrollAnimation()
+
+  // Chatbot state
+  const [chatInput, setChatInput] = useState("")
+  const [chatHistory, setChatHistory] = useState([
+    { sender: "bot", message: "Hi! How can I help you today?" }
+  ])
+
+  const handleChatInputChange = (e) => {
+    setChatInput(e.target.value)
+  }
+
+  const handleChatSubmit = (e) => {
+    e.preventDefault()
+    if (!chatInput.trim()) return
+    setChatHistory(prev => [...prev, { sender: "user", message: chatInput }])
+    setTimeout(() => {
+      setChatHistory(prev => [...prev, { sender: "bot", message: "Thank you for your message! (This is a demo response.)" }])
+    }, 700)
+    setChatInput("")
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -584,7 +607,7 @@ function App() {
                   </button>
                 </form>
                 <div className="mt-4">
-                  <a href="/home/ubuntu/upload/.recovery/VISHALCHETTRIResume.pdf" download="VISHALCHETTRIResume.pdf" className="button outline w-full text-center">
+                  <a href="C:\Users\visha\Desktop\portfolio\public\Vishal_Chettri_Technical_Business_Analyst.pdf" download="VISHALCHETTRIResume.pdf" className="button outline w-full text-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
                     Download Resume
                   </a>
@@ -594,6 +617,49 @@ function App() {
           </div>
         </div>
       </section>
+
+
+      {/* Floating Chatbot Icon & Widget */}
+      <div style={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000}}>
+        {!chatbotOpen && (
+          <button
+            onClick={toggleChatbot}
+            style={{background: '#2563eb', borderRadius: '50%', width: 56, height: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', border: 'none', cursor: 'pointer'}}
+            aria-label="Open Chatbot"
+          >
+            {/* Message Icon SVG */}
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        )}
+        {chatbotOpen && (
+          <section id="chatbot" className="w-80 h-96 p-3 bg-white/10 rounded-xl shadow-2xl border border-slate-800 flex flex-col">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-bold text-white">Chatbot</h2>
+              <button onClick={toggleChatbot} aria-label="Close Chatbot" className="text-white hover:text-red-400 text-xl font-bold">×</button>
+            </div>
+            <div className="flex-1 overflow-y-auto bg-slate-900 rounded-lg p-2 mb-2 border border-slate-700 text-xs">
+              {chatHistory.map((chat, idx) => (
+                <div key={idx} className={`mb-2 flex ${chat.sender === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`px-3 py-1 rounded-lg max-w-[70%] ${chat.sender === "user" ? "bg-blue-600 text-white" : "bg-slate-800 text-slate-200"}`}>
+                    {chat.message}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <form onSubmit={handleChatSubmit} className="flex gap-1">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={handleChatInputChange}
+                className="flex-1 px-2 py-1 rounded-lg border border-slate-700 bg-slate-800 text-white text-xs focus:outline-none"
+                placeholder="Type..."
+                autoComplete="off"
+              />
+              <button type="submit" className="bg-blue-600 text-white px-3 py-1 rounded-lg font-semibold hover:bg-blue-700 transition text-xs">Send</button>
+            </form>
+          </section>
+        )}
+      </div>
 
       {/* Footer */}
       <footer className="bg-slate-800 text-white py-12 relative z-1">
@@ -613,7 +679,7 @@ function App() {
               </a>
             </div>
             <p className="text-slate-400 text-sm">
-              © 2025 Vishal Chettri. All rights reserved.
+              © 2026 Vishal Chettri. All rights reserved.
             </p>
           </div>
         </div>
