@@ -186,7 +186,7 @@ function App() {
     {
       title: 'Research Analyst',
       company: 'Dragale Aviation (Remote)',
-      duration: 'Jul 2025 – Sep 2025',
+      duration: 'Jan 2025 – Jun 2025',
       description: 'Conducted data-driven research and analysis to support aviation operations and business decisions. Collected, organized, and interpreted datasets to identify trends and insights. Prepared concise reports and visual presentations to assist management in strategic planning and performance evaluation. Authored 5+ data-driven articles using Python visualizations, increasing engagement by 15%.',
     },
     {
@@ -291,7 +291,7 @@ function App() {
             </div>
             <div className="slide-in-right-on-scroll">
               <p className="text-lg text-slate-300 mb-6">
-                Results-driven Data Scientist with expertise in Python, SQL, Machine Learning, and Business Intelligence, specializing in transforming complex datasets into actionable insights. Proven track record in predictive modeling, ETL pipeline development, and data visualization (Power BI) to enable data-informed strategies.
+                Results-driven Data Scientist with a BCA in Data Science and strong skills in Python, SQL, Power BI, and Tableau. Experienced in analytics, business process analysis, and machine learning through internships with UNDP Bhutan, GovTech Bhutan, Omdena, Earth5R, Bharat Intern, and YBI Foundation. Proven track record in projects such as Smart Resume Analyzer, Customer Churn Prediction, Sales Forecasting, and Sentiment Analysis. Certified by Google, IBM, Harvard CS50, and edX, with strong multilingual communication skills.
               </p>
               <p className="text-lg text-slate-300 mb-6">
                 Adapt at designing and implementing AI-powered solutions to optimize operational efficiency and support strategic decision-making. Combines strong technical proficiency with analytical acumen to deliver scalable, data-driven results.
