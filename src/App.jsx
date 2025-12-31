@@ -61,11 +61,7 @@ function App() {
 
     try {
       // Using Formspree to send emails directly to chettrivishal677@gmail.com
-      // IMPORTANT: You need the FORM ID (not Project ID or Deploy Key)
-      // To find it: Go to Forms → Click your form → The Form ID is in the URL: formspree.io/f/YOUR_FORM_ID
-      // It looks like: xpwnvqjz or mknqwerty (short alphanumeric, NOT a long UUID)
-      
-      const FORMSPREE_FORM_ID = 'YOUR_FORM_ID_HERE' // ⬅️ REPLACE with your actual Form ID from Forms page
+      const FORMSPREE_FORM_ID = 'mykyronj' // Your Formspree Form ID
       
       // Using form-urlencoded format which works better with Formspree
       const formDataToSend = new URLSearchParams()
