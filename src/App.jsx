@@ -44,7 +44,7 @@ function App() {
       description: 'Led development of an AI-powered mental health assistant using transformer models (MentalBERT, MentalRoBERTa) for emotion detection and mental health condition classification.',
       technologies: ['Python', 'Transformer Models', 'NLP', 'Machine Learning'],
       achievements: ['Fine-tuned state-of-the-art models', 'Real-time AI support system', 'Personalized recommendations'],
-      image: './assets/images/ai-mental-health.webp'
+      image: `${import.meta.env.BASE_URL}assets/images/ai-mental-health.webp`
     },
     {
       title: 'Agricultural & Livestock Data Dashboard',
@@ -53,7 +53,7 @@ function App() {
       description: 'Developed interactive Power BI dashboard for agriculture and livestock survey data visualization with region-wise analysis capabilities.',
       technologies: ['Power BI', 'Excel', 'SQL', 'Data Visualization'],
       achievements: ['Interactive KPIs and charts', 'Map visualizations', 'Multilingual data labels'],
-      image: './assets/images/agricultural-dashboard.png'
+      image: `${import.meta.env.BASE_URL}assets/images/agricultural-dashboard.png`
     },
     {
       title: 'Smart Resume Analyzer',
@@ -62,7 +62,7 @@ function App() {
       description: 'Built AI-powered tool with Gemini AI for ATS scoring, improving parsing accuracy by 35% with automated text extraction and quality scoring.',
       technologies: ['Python', 'Gemini AI', 'PyMuPDF', 'OCR', 'Firebase', 'AWS', 'Streamlit'],
       achievements: ['35% improved parsing accuracy', 'Real-time feedback system', 'Cloud storage integration'],
-      image: './assets/images/smart-resume-analyzer.webp'
+      image: `${import.meta.env.BASE_URL}assets/images/smart-resume-analyzer.webp`
     },
     {
       title: 'Customer Churn Prediction Model',
@@ -71,7 +71,7 @@ function App() {
       description: 'Achieved 80% accuracy using Scikit-learn and reduced churn rate by 12% through Power BI insights and predictive modeling.',
       technologies: ['Python', 'Scikit-learn', 'Power BI', 'Machine Learning'],
       achievements: ['80% model accuracy', '12% churn rate reduction', 'Automated alerts system'],
-      image: './assets/images/customer-churn.png'
+      image: `${import.meta.env.BASE_URL}assets/images/customer-churn.png`
     },
     {
       title: 'Sales Forecasting Dashboard',
@@ -80,7 +80,7 @@ function App() {
       description: 'Applied ARIMA time-series analysis boosting prediction accuracy by 15% with interactive Power BI dashboards.',
       technologies: ['Power BI', 'ARIMA', 'Time Series Analysis', 'DAX'],
       achievements: ['15% improved accuracy', 'Interactive dashboards', 'Automated reporting'],
-      image: './assets/images/sales-analysis.webp'
+      image: `${import.meta.env.BASE_URL}assets/images/sales-analysis.webp`
     },
     {
       title: 'Sentiment Analysis',
@@ -89,7 +89,7 @@ function App() {
       description: 'Scraped and analyzed 1,000+ tweets with 80% sentiment classification accuracy using NLTK and TextBlob.',
       technologies: ['Python', 'NLTK', 'TextBlob', 'Data Scraping'],
       achievements: ['80% classification accuracy', '1,000+ tweets analyzed', 'Keyword frequency analysis'],
-      image: './assets/images/sentiment-analysis.jpeg'
+      image: `${import.meta.env.BASE_URL}assets/images/sentiment-analysis.jpeg`
     }
   ]
 
@@ -203,7 +203,7 @@ function App() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="slide-in-left-on-scroll">
               <div className="w-64 h-64 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full mx-auto mb-8 flex items-center justify-center overflow-hidden">
-                <img src="assets/images/profile.jpeg" alt="Vishal Chettri" className="w-full h-full object-cover rounded-full animate-float" />
+                <img src={`${import.meta.env.BASE_URL}assets/images/profile.jpeg`} alt="Vishal Chettri" className="w-full h-full object-cover rounded-full animate-float" />
               </div>
             </div>
             <div className="slide-in-right-on-scroll">
