@@ -61,36 +61,46 @@ function App() {
 
     try {
       // Using Formspree to send emails directly to chettrivishal677@gmail.com
-      // SETUP REQUIRED: 
-      // 1. Go to https://formspree.io/ and create a free account
-      // 2. Create a new form with email: chettrivishal677@gmail.com
-      // 3. Copy your form ID (looks like: xpwnvqjz)
-      // 4. Replace 'xpwnvqjz' below with your actual Formspree form ID
-      const FORMSPREE_FORM_ID = 'xpwnvqjz' // ⬅️ REPLACE THIS with your Formspree form ID
+      // IMPORTANT: You need the FORM ID (not Project ID or Deploy Key)
+      // To find it: Go to Forms → Click your form → The Form ID is in the URL: formspree.io/f/YOUR_FORM_ID
+      // It looks like: xpwnvqjz or mknqwerty (short alphanumeric, NOT a long UUID)
+      
+      const FORMSPREE_FORM_ID = 'YOUR_FORM_ID_HERE' // ⬅️ REPLACE with your actual Form ID from Forms page
+      
+      // Using form-urlencoded format which works better with Formspree
+      const formDataToSend = new URLSearchParams()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('subject', formData.subject || 'Portfolio Contact Form')
+      formDataToSend.append('message', formData.message)
+      formDataToSend.append('_replyto', formData.email)
+      formDataToSend.append('_subject', formData.subject || 'New Message from Portfolio')
+      
       const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject || 'Portfolio Contact Form',
-          message: formData.message,
-          _replyto: formData.email,
-          _subject: formData.subject || 'New Message from Portfolio',
-        }),
+        body: formDataToSend,
       })
+
+      const responseData = await response.json()
 
       if (response.ok) {
         setFormStatus({ type: 'success', message: 'Thank you! Your message has been sent successfully. I\'ll get back to you soon!' })
         setFormData({ name: '', email: '', subject: '', message: '' })
       } else {
-        throw new Error('Failed to send message')
+        // Get error message from Formspree response
+        const errorMsg = responseData.error || 'Failed to send message'
+        throw new Error(errorMsg)
       }
     } catch (error) {
       console.error('Error sending email:', error)
-      setFormStatus({ type: 'error', message: 'Sorry, there was an error sending your message. Please try again or email me directly at chettrivishal677@gmail.com' })
+      // Fallback to mailto on error
+      const mailtoLink = `mailto:chettrivishal677@gmail.com?subject=${encodeURIComponent(formData.subject || 'Portfolio Contact')}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`
+      window.location.href = mailtoLink
+      setFormStatus({ type: 'info', message: 'Opening your email client as fallback. Your message is ready to send!' })
+      setFormData({ name: '', email: '', subject: '', message: '' })
     } finally {
       setIsSubmitting(false)
     }
